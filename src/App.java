@@ -41,66 +41,45 @@ public class App {
         return x;
     }
 
-    //Método para comprobar que el nombre es válido(que no esté vacío)
-    public static boolean nombreValido(Scanner sc, String prompt) {     
-        String nombre = sc.nextLine();   
-        if (nombre == null) {
-            return false;
-        }
-        //Elimina espacios al principio y al final
-        nombre = nombre.trim();
-        //Comprueba que queda algo después de quitar espacios
-        if (nombre.length() == 0) {
-            return false;
-        }
-        return true;  
-    }
-
-    //Método que devuelve el nombre si es válido
-    public static String leerStringValida(Scanner sc, String prompt) {
-        String x;
-        do {
+    //METODO PARA PEDIR UNA OPCION VALIDA
+    public static String leerOpcionValida(Scanner sc, String prompt, String [] opcionesValidas) {
+        String cadena = "";
+        boolean esValida = false;
+        while (!esValida) {
             System.out.print(prompt);
-            x = sc.nextLine();
-        } while (!nombreValido(sc, x));
-        return x;
+            cadena = sc.nextLine().trim();
+            if (cadena == null || cadena.length() == 0) {
+                System.out.println("No puede estar vacio. ");;
+            } else {
+                for (int i = 0; i < opcionesValidas.length; i++) {
+                    if (cadena.equalsIgnoreCase(opcionesValidas[i])) {
+                        esValida = true;
+                    }else{
+                        //String join es para unir los elementos de un array en una sola cadena separada por comas
+                        System.out.println("Opcion no valida, debe ser una de las siguientes: " + String.join(", ", opcionesValidas));
+                    }
+                }
+            }
+        }
+        return cadena;
     }
 
     //Método para comprobar que el nombre es válido(que no esté vacío)
-    public static boolean rolValido(Scanner sc, String prompt) {     
-        String rol = sc.nextLine();   
-        if (rol == null) {
-            return false;
-        }
-        //Elimina espacios al principio y al final
-        rol = rol.trim();
-        //Comprueba que queda algo después de quitar espacios
-        if (rol.length() == 0) {
-            return false;
-        }
-        return true;  
-    }
-        //Método que devuelve el nombre si es válido
-    public static String leerRolValida(Scanner sc, String prompt) {
-        String x;
-        do {
+    public static String nombreValido(Scanner sc, String prompt) {     
+        String nombre = ""; 
+        boolean esValido = false;  
+        while(esValido!=true) {
             System.out.print(prompt);
-            x = sc.nextLine();
-        } while (!rolValido(sc, x));
-        return x;
-    }
-    //Método para leer un rol válido
-    static String leerRolBueno(Scanner sc, String prompt, String[] rolesValidos) {
-        System.out.println("Rol (Piloto / Ingeniero / Marine / Medico): ");
-        System.out.print(prompt);
-        if(prompt.equals("Piloto") || prompt.equals("Ingeniero") || prompt.equals("Marine") || prompt.equals("Medico")){
-            return prompt;
-        } else {
-            System.out.print("Rol no valido. ");
+            nombre = sc.nextLine().trim();
+            //Comprueba que queda algo después de quitar espacios
+            if (nombre.length() == 0) {
+                System.out.println("El nombre no puede estar vacío. ");
+            } else {
+                esValido = true;
+            }
         }
-        return sc.nextLine();
+        return nombre;
     }
-
 
 
     //---FUNCIONALIDADES DEL PROGRAMA-----
