@@ -1,25 +1,67 @@
 import java.util.Scanner;
 
 public class App {
-    Scanner sc = new Scanner(System.in);
+    static Scanner sc = new Scanner(System.in);
+    static int opcion;
     public static void main(String[] args) throws Exception {
-        Tripulante [] tripulante = new Tripulante[20];
-        Habilidad [] habilidad = new Habilidad[20];
-        Mision [] mision = new Mision[20];
-        String [] rolesValidos = {"Piloto", "Ingeniero", "Marine", "Médico"};
-
-
-        System.out.println("-------------STARFALL CHRONICLE-------------");
-        System.out.println("Menu: ");
-
+        final int MAX = 20;
+        Tripulante [] tripulante = new Tripulante[MAX];
+        Habilidad [] habilidad = new Habilidad[MAX];
+        Mision [] mision = new Mision[MAX];
+        /*String [] rolesValidos = {"Piloto", "Ingeniero", "Marine", "Médico"};
+        String [] tiposValidos = {"Tecnología", "Arma", "Soporte", "Hacking"};
+        String [] tiposValidosTodos = {"Tecnología", "Arma", "Soporte", "Hacking", "Todos"};
+        */
+        int tope=0;
+        boolean salir = false;
+        do{
+            mostrarMenu();
+            switch(opcion) {
+                case 1:
+                    System.out.println("Insertar tripulante/habilidad/mision (al final)");
+                    insertarDatos(tripulante, habilidad, mision);
+                    break;
+                case 14:
+                    salir = true;
+                    System.out.println("Has decidido salir del programa.");
+                    break;
+                default:
+                    System.out.println("Opcion no valida, por favor seleccione una opcion del 1 al 14.");
+            }
+        }while(opcion != 14);
+        sc.close();
     }
 
     //---FUNCIONALIDADES GENERALES-----
+    //Metodo para mostrar el menu
+    public static void mostrarMenu() {
+        System.out.println("-------------STARFALL CHRONICLE-------------");
+        System.out.println("Menu: ");
+        System.out.println("1.- Insertar tripulante/habilidad/mision (al final)");
+        System.out.println("2.- Insertar tripulante/habilidad/mision en posicion concreta del array");
+        System.out.println("3.- Eliminar tripulante/habilidad/mision por posicion");
+        System.out.println("4.- Mostrar todos tripulantes/habilidades/misiones");
+        System.out.println("5.- Buscar tripulante/habilidad/mision por ID");
+        System.out.println("6.- Ordenar tripulantes alfabeticamente");
+        System.out.println("7.- Asignar habilidad a tripulante a partir de IDs");
+        System.out.println("8.- Completar mision");
+        System.out.println("9.- Contar misiones peligrosas");
+        System.out.println("10.- Guardar datos en archivos de texto");
+        System.out.println("11.- Cargar datos desde texto y mostrar");
+        System.out.println("12.- Guardar datos en archivo binarios");
+        System.out.println("13.- Cargar datos desde binarios y mostrar");
+        System.out.println("14.- Salir");
+        opcion = sc.nextInt();
+        sc.nextLine();
+    }
+
+
+
     //Método para leer un número delimitado
     static int leerEnteroEnRango(Scanner sc, String prompt, int min, int max) {
         int x;
         do {
-            System.out.print(prompt);
+            System.out.println(prompt);
             while (!sc.hasNextInt()) {
                 System.out.print("Introduce un entero: ");
                 sc.next();
@@ -30,6 +72,7 @@ public class App {
         return x;
     } 
 
+    //ARREGLAR ESTE METODO PARA QUE NO LEA LOS ESPACIOS O INSERTS
     //Método para leer un entero mínimo
     static int leerIntMin(Scanner sc, String prompt, int min) {
         int x;
@@ -48,16 +91,21 @@ public class App {
         while (!esValida) {
             System.out.print(prompt);
             cadena = sc.nextLine().trim();
-            if (cadena == null || cadena.length() == 0) {
+            if (cadena.length() == 0) {
                 System.out.println("No puede estar vacio. ");;
             } else {
+                //creo la variable coincide para comprobar si la opcion introducida es valida y así salir del bucle
+                boolean coincide = false;
                 for (int i = 0; i < opcionesValidas.length; i++) {
                     if (cadena.equalsIgnoreCase(opcionesValidas[i])) {
-                        esValida = true;
-                    }else{
-                        //String join es para unir los elementos de un array en una sola cadena separada por comas
-                        System.out.println("Opcion no valida, debe ser una de las siguientes: " + String.join(", ", opcionesValidas));
+                        coincide = true;
                     }
+                }
+                if(coincide) {
+                    esValida = true;
+                } else {
+                    //String join es para unir los elementos de un array en una sola cadena separada por comas
+                    System.out.println("Opcion no valida, debe ser una de las siguientes: " + String.join(", ", opcionesValidas));
                 }
             }
         }
@@ -84,8 +132,8 @@ public class App {
 
     //---FUNCIONALIDADES DEL PROGRAMA-----
     //1.Insertar tripulante/habilidad/misión (al final)
-    public void insertarDatos(Tripulante[] tripulante, Habilidad[] habilidad, Mision[] mision) {
-        int desearContinuar=0;
+    public static void insertarDatos(Tripulante[] tripulante, Habilidad[] habilidad, Mision[] mision) {
+        int desearContinuar;
         int tope=0;
         String [] rolesValidos = {"Piloto", "Ingeniero", "Marine", "Médico"};
         String [] tiposValidos = {"Tecnología", "Arma", "Soporte", "Hacking"};
@@ -97,60 +145,73 @@ public class App {
             if(eleccion == 1){
                 //Insertar tripulante
                 //ID, nombre, rol, nivel, experiencia, vida, energía
-                for(int i=0; i<tripulante.length; i++){
+                if(tope<tripulante.length){
+                    //creamos un nuevo tripulante en cada posicion del array
+                    Tripulante t = new Tripulante();
                     //ID
-                    tripulante[i].id = leerIntMin(sc, "Introduce el ID: ", 0);
+                    t.id = leerIntMin(sc, "Introduce el ID: ", 0);
                     //NOMBRE
-                    tripulante[i].nombre = leerNombreValido(sc, "Introduce el nombre: ");
+                    t.nombre = leerNombreValido(sc, "Introduce el nombre: ");
                     //ROL
-                    tripulante[i].rol = leerOpcionValida( sc,  "Introduce el rol (Piloto, Ingeniero, Marine, Medico): ",  rolesValidos);
+                    t.rol = leerOpcionValida( sc,  "Introduce el rol (Piloto, Ingeniero, Marine, Medico): ",  rolesValidos);
                     //NIVEL
-                    tripulante[i].nivel = leerIntMin(sc, "Introduce el nivel: ", 0);
+                    t.nivel = leerIntMin(sc, "Introduce el nivel: ", 0);
                     //EXPERIENCIA
-                    tripulante[i].experiencia = leerIntMin(sc, "Introduce la experiencia: ", 0);
+                    t.experiencia = leerIntMin(sc, "Introduce la experiencia: ", 0);
                     //VIDA
-                    tripulante[i].vida = leerIntMin(sc, "Introduce la vida: ", 0);
+                    t.vida = leerIntMin(sc, "Introduce la vida: ", 0);
                     //ENERGÍA
-                    tripulante[i].energía = leerIntMin(sc, "Introduce la energia: ", 0);
+                    t.energía = leerIntMin(sc, "Introduce la energia: ", 0);
                     //en que puesto ha sido insertado
-                    System.out.print("Tripulante insertado en posicion " + i + ". ");
+                    System.out.print("Tripulante insertado en posicion " + tope + ". ");
                     tope++;
+                }else{
+                    System.out.println("No se pueden insertar más tripulantes, el array está lleno.");
                 }
+                //--------------------------------------return tope;
             } else if (eleccion == 2) {
                 //Insertar habilidad
                 //ID, nombre, descripcion, tipo, costeEnergia, clasePermitida
-                for(int i=0; i<habilidad.length; i++){
+                if(tope<habilidad.length){
+                    //creamos una nueva habilidad en cada posicion del array
+                    Habilidad h = new Habilidad();
                     //ID
-                    habilidad[i].id = leerIntMin(sc, "Introduce el ID: ", 0);
+                    h.id = leerIntMin(sc, "Introduce el ID: ", 0);
                     //NOMBRE
-                    habilidad[i].nombre = leerNombreValido(sc, "Introduce el nombre: ");
+                    h.nombre = leerNombreValido(sc, "Introduce el nombre: ");
                     ////////NO SE MUY BIEN COMO HACER ESTO DE LA DESCRIPCION////////
                     System.out.print("Introduce la descripcion: ");
-                    habilidad[i].descripcion = leerNombreValido(sc, "Introduce la descripcion: ");
+                    h.descripcion = leerNombreValido(sc, "Introduce la descripcion: ");
                     //TIPO
-                    habilidad[i].tipo = leerOpcionValida( sc,  "Introduce el tipo (Tecnología, Arma, Soporte, Hacking): ",  tiposValidos);
+                    h.tipo = leerOpcionValida( sc,  "Introduce el tipo (Tecnología, Arma, Soporte, Hacking): ",  tiposValidos);
                     //COSTE ENERGIA
-                    habilidad[i].costeEnergia = leerIntMin(sc, "Introduce el coste de energia: ", 0);
+                    h.costeEnergia = leerIntMin(sc, "Introduce el coste de energia: ", 0);
                     //CLASE PERMITIDA
-                    habilidad[i].clasePermitida = leerOpcionValida( sc,  "Introduce que tipo tiene permitido usar esa habilidad (pueden ser todos): ",  tiposValidosTodos);
+                    h.clasePermitida = leerOpcionValida( sc,  "Introduce que tipo tiene permitido usar esa habilidad (pueden ser todos): ",  tiposValidosTodos);
 
                     System.out.print("Habilidad insertada en posicion " + tope);
                     tope++;
+                }else{
+                    System.out.println("No se pueden insertar más habilidades, el array está lleno.");
                 }
             } else {
                 //Insertar mision
                 //ID, nombre, dificultad, recompensaXP
-                for(int i=0; i<mision.length; i++){
+                if(tope<mision.length){
+                    //creamos una nueva mision en cada posicion del array
+                    Mision m = new Mision();
                     //ID
-                    mision[i].id = leerIntMin(sc, "Introduce el ID: ", 0);
+                    m.id = leerIntMin(sc, "Introduce el ID: ", 0);
                     //NOMBRE
-                    mision[i].nombre = leerNombreValido(sc, "Introduce el nombre: ");
+                    m.nombre = leerNombreValido(sc, "Introduce el nombre: ");
                     //DIFICULTAD
-                    mision[i].dificultad = leerEnteroEnRango(sc, "Introduce la dificultad (1..10): ", 1, 10);
+                    m.dificultad = leerEnteroEnRango(sc, "Introduce la dificultad (1..10): ", 1, 10);
                     //RECOMPENSA XP
-                    mision[i].recompensaXP = leerIntMin(sc, "Introduce la recompensa de XP: ", 0);
+                    m.recompensaXP = leerIntMin(sc, "Introduce la recompensa de XP: ", 0);
                     System.out.print("Mision insertada en posicion " + tope);
                     tope++;
+                }else{
+                    System.out.println("No se pueden insertar más misiones, el array está lleno.");
                 }
             }
             desearContinuar = leerEnteroEnRango(sc, "Desea insertar otro dato? 1.-Si 2.-No", 1, 2);
