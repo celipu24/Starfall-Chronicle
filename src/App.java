@@ -65,7 +65,7 @@ public class App {
     }
 
     //Método para comprobar que el nombre es válido(que no esté vacío)
-    public static String nombreValido(Scanner sc, String prompt) {     
+    public static String leerNombreValido(Scanner sc, String prompt) {     
         String nombre = ""; 
         boolean esValido = false;  
         while(esValido!=true) {
@@ -88,6 +88,9 @@ public class App {
         int desearContinuar=0;
         int tope=0;
         String [] rolesValidos = {"Piloto", "Ingeniero", "Marine", "Médico"};
+        String [] tiposValidos = {"Tecnología", "Arma", "Soporte", "Hacking"};
+        String [] tiposValidosTodos = {"Tecnología", "Arma", "Soporte", "Hacking", "Todos"};
+
 
         do{
             int eleccion = leerEnteroEnRango(sc,"Que desea insertar? 1.-Tripulante 2.-Habilidad 3.-Mision", 1, 3);
@@ -100,7 +103,7 @@ public class App {
                     //NOMBRE
                     tripulante[i].nombre = leerNombreValido(sc, "Introduce el nombre: ");
                     //ROL
-                    tripulante[i].rol = leerRolValido( sc,  "Introduce el rol (Piloto, Ingeniero, Marine, Medico): ",  rolesValidos);
+                    tripulante[i].rol = leerOpcionValida( sc,  "Introduce el rol (Piloto, Ingeniero, Marine, Medico): ",  rolesValidos);
                     //NIVEL
                     tripulante[i].nivel = leerIntMin(sc, "Introduce el nivel: ", 0);
                     //EXPERIENCIA
@@ -123,34 +126,32 @@ public class App {
                     habilidad[i].nombre = leerNombreValido(sc, "Introduce el nombre: ");
                     ////////NO SE MUY BIEN COMO HACER ESTO DE LA DESCRIPCION////////
                     System.out.print("Introduce la descripcion: ");
-                    habilidad[i].descripcion = sc.next();
+                    habilidad[i].descripcion = leerNombreValido(sc, "Introduce la descripcion: ");
+                    //TIPO
+                    habilidad[i].tipo = leerOpcionValida( sc,  "Introduce el tipo (Tecnología, Arma, Soporte, Hacking): ",  tiposValidos);
+                    //COSTE ENERGIA
+                    habilidad[i].costeEnergia = leerIntMin(sc, "Introduce el coste de energia: ", 0);
+                    //CLASE PERMITIDA
+                    habilidad[i].clasePermitida = leerOpcionValida( sc,  "Introduce que tipo tiene permitido usar esa habilidad (pueden ser todos): ",  tiposValidosTodos);
 
-                    System.out.print("Introduce el tipo (Tecnología, Arma, Soporte, Hacking): ");
-                    habilidad[i].tipo = sc.next();
-                    System.out.print("Introduce el coste de energia: ");
-                    habilidad[i].costeEnergia = sc.nextInt();
-                    System.out.print("Introduce la clase permitida (rol permitido o Todos): ");
-                    habilidad[i].clasePermitida = sc.next();
                     System.out.print("Habilidad insertada en posicion " + tope);
                     tope++;
                 }
-            } else if (eleccion == 3) {
+            } else {
                 //Insertar mision
                 //ID, nombre, dificultad, recompensaXP
                 for(int i=0; i<mision.length; i++){
-                    System.out.print("Introduce el ID: ");
-                    mision[i].id = sc.nextInt();
-                    System.out.print("Introduce el nombre: ");
-                    mision[i].nombre = sc.next();
-                    System.out.print("Introduce la dificultad (1..10): ");
-                    mision[i].dificultad = sc.nextInt();
-                    System.out.print("Introduce la recompensa de XP: ");
-                    mision[i].recompensaXP = sc.nextInt();
-                    System.out.print("Mision insertada en posicion " + tope);;
+                    //ID
+                    mision[i].id = leerIntMin(sc, "Introduce el ID: ", 0);
+                    //NOMBRE
+                    mision[i].nombre = leerNombreValido(sc, "Introduce el nombre: ");
+                    //DIFICULTAD
+                    mision[i].dificultad = leerEnteroEnRango(sc, "Introduce la dificultad (1..10): ", 1, 10);
+                    //RECOMPENSA XP
+                    mision[i].recompensaXP = leerIntMin(sc, "Introduce la recompensa de XP: ", 0);
+                    System.out.print("Mision insertada en posicion " + tope);
                     tope++;
                 }
-            } else {
-                System.out.println("Opcion no valida");
             }
             desearContinuar = leerEnteroEnRango(sc, "Desea insertar otro dato? 1.-Si 2.-No", 1, 2);
         }while(desearContinuar != 2);
