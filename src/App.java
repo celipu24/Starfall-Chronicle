@@ -1,9 +1,11 @@
 import java.util.Scanner;
 
 public class App {
-    static Scanner sc = new Scanner(System.in);
+    //variable global
     static int opcion;
     public static void main(String[] args) throws Exception {
+        
+        Scanner sc = new Scanner(System.in);
         final int MAX = 20;
         Tripulante [] tripulante = new Tripulante[MAX];
         Habilidad [] habilidad = new Habilidad[MAX];
@@ -15,11 +17,11 @@ public class App {
         int tope=0;
         boolean salir = false;
         do{
-            mostrarMenu();
+            mostrarMenu(sc);
             switch(opcion) {
                 case 1:
                     System.out.println("Insertar tripulante/habilidad/mision (al final)");
-                    insertarDatos(tripulante, habilidad, mision);
+                    insertarDatos(sc, tripulante, habilidad, mision);
                     break;
                 case 14:
                     salir = true;
@@ -34,7 +36,7 @@ public class App {
 
     //---FUNCIONALIDADES GENERALES-----
     //Metodo para mostrar el menu
-    public static void mostrarMenu() {
+    public static void mostrarMenu(Scanner sc) {
         System.out.println("-------------STARFALL CHRONICLE-------------");
         System.out.println("Menu: ");
         System.out.println("1.- Insertar tripulante/habilidad/mision (al final)");
@@ -51,36 +53,94 @@ public class App {
         System.out.println("12.- Guardar datos en archivo binarios");
         System.out.println("13.- Cargar datos desde binarios y mostrar");
         System.out.println("14.- Salir");
-        opcion = sc.nextInt();
-        sc.nextLine();
+        opcion = leerEnteroEnRango(sc, "Elija una opcion: ", 1, 14);
+       //sc.nextLine();
     }
 
 
 
     //Método para leer un número delimitado
     static int leerEnteroEnRango(Scanner sc, String prompt, int min, int max) {
-        int x;
-        do {
-            System.out.println(prompt);
-            while (!sc.hasNextInt()) {
-                System.out.print("Introduce un entero: ");
-                sc.next();
+        int x=0;
+        boolean esValido = false;
+        while(!esValido) {
+            System.out.print(prompt);
+            String entrada = sc.nextLine().trim();
+            //1.-Comprobamos que no este vacío (ni inserts, ni espacios)
+            if (entrada.length()==0) {
+                System.out.print("No puede estar vacio.\n");
+            //2.-Comprobamos que sea un int
+            }else{
+                boolean esNumero = true;
+                //recorremos toda la cadena comprobando que todos los caracteres sean int
+                for (int i = 0; i < entrada.length(); i++) {
+                    //hacemos una variable char para almacenar el caracter actual, así solo se aceptara un - delante del numero
+                    char c = entrada.charAt(i);
+                    if(i==0 && c=='-'){
+                    }else{
+                        if (!Character.isDigit(c)) {
+                            esNumero = false;
+                        }
+                    }
+                }
+                //salta mensaje de error si no es un numero
+                if(!esNumero) {
+                    System.out.print("Debe ser un numero entero.\n");
+                }else{
+                    //convierte el String a int
+                    x = Integer.parseInt(entrada);
+                    //3.-Comprobamos que sea mayor o igual que el minimo y menor o igual que el maximo
+                    if (x < min || x > max) {
+                        System.out.print("El numero introducido debe estar entre " + min + " y " + max + ".\n");
+                    }else{
+                        esValido = true;
+                    }
+                }
             }
-            x = sc.nextInt();
-            sc.nextLine();
-        } while (x < min || x > max);
+        }
         return x;
     } 
 
-    //ARREGLAR ESTE METODO PARA QUE NO LEA LOS ESPACIOS O INSERTS
+    //ARREGLAR ESTE METODO PARA QUE NO LEA LOS ESPACIOS O INSERTS *SEGURIDAD*
     //Método para leer un entero mínimo
     static int leerIntMin(Scanner sc, String prompt, int min) {
-        int x;
-        do {
+        int x=0;
+        boolean esValido = false;
+        while(!esValido) {
             System.out.print(prompt);
-            while (!sc.hasNextInt()) { System.out.print("Introduce un número: "); sc.next(); }
-            x = sc.nextInt(); sc.nextLine();
-        } while (x < min);
+            String entrada = sc.nextLine().trim();
+            //1.-Comprobamos que no este vacío (ni inserts, ni espacios)
+            if (entrada.length()==0) {
+                System.out.print("No puede estar vacio.\n");
+            //2.-Comprobamos que sea un int
+            }else{
+                boolean esNumero = true;
+                //recorremos toda la cadena comprobando que todos los caracteres sean int
+                for (int i = 0; i < entrada.length(); i++) {
+                    //hacemos una variable char para almacenar el caracter actual, así solo se aceptara un - delante del numero
+                    char c = entrada.charAt(i);
+                    if(i==0 && c=='-'){
+                    }else{
+                        if (!Character.isDigit(c)) {
+                            esNumero = false;
+                        }
+                    }
+                }
+                //salta mensaje de error si no es un numero
+                if(!esNumero) {
+                    System.out.print("Debe ser un numero entero.\n");
+                }else{
+                    //convierte el String a int
+                    x = Integer.parseInt(entrada);
+                    //3.-Comprobamos que sea mayor o igual que el minimo
+                    if (x < min) {
+                        System.out.print("El numero introducido debe ser mayor que " + min  + ".\n");
+                    }else{
+                        esValido = true;
+                    }
+                }
+            }
+        }
         return x;
     }
 
@@ -93,7 +153,7 @@ public class App {
             cadena = sc.nextLine().trim();
             if (cadena.length() == 0) {
                 System.out.println("No puede estar vacio. ");;
-            } else {
+            }else{
                 //creo la variable coincide para comprobar si la opcion introducida es valida y así salir del bucle
                 boolean coincide = false;
                 for (int i = 0; i < opcionesValidas.length; i++) {
@@ -105,7 +165,7 @@ public class App {
                     esValida = true;
                 } else {
                     //String join es para unir los elementos de un array en una sola cadena separada por comas
-                    System.out.println("Opcion no valida, debe ser una de las siguientes: " + String.join(", ", opcionesValidas));
+                    System.out.println("Opcion no valida. ");
                 }
             }
         }
@@ -122,7 +182,7 @@ public class App {
             //Comprueba que queda algo después de quitar espacios
             if (nombre.length() == 0) {
                 System.out.println("El nombre no puede estar vacío. ");
-            } else {
+            }else {
                 esValido = true;
             }
         }
@@ -132,16 +192,16 @@ public class App {
 
     //---FUNCIONALIDADES DEL PROGRAMA-----
     //1.Insertar tripulante/habilidad/misión (al final)
-    public static void insertarDatos(Tripulante[] tripulante, Habilidad[] habilidad, Mision[] mision) {
+    public static void insertarDatos(Scanner sc, Tripulante[] tripulante, Habilidad[] habilidad, Mision[] mision) {
         int desearContinuar;
         int tope=0;
-        String [] rolesValidos = {"Piloto", "Ingeniero", "Marine", "Médico"};
-        String [] tiposValidos = {"Tecnología", "Arma", "Soporte", "Hacking"};
-        String [] tiposValidosTodos = {"Tecnología", "Arma", "Soporte", "Hacking", "Todos"};
+        String [] rolesValidos = {"Piloto", "Ingeniero", "Marine", "Medico"};
+        String [] tiposValidos = {"Tecnologia", "Arma", "Soporte", "Hacking"};
+        String [] tiposValidosTodos = {"Tecnologia", "Arma", "Soporte", "Hacking", "Todos"};
 
 
         do{
-            int eleccion = leerEnteroEnRango(sc,"Que desea insertar? 1.-Tripulante 2.-Habilidad 3.-Mision", 1, 3);
+            int eleccion = leerEnteroEnRango(sc,"Que desea insertar? 1.-Tripulante 2.-Habilidad 3.-Mision:\n", 1, 3);
             if(eleccion == 1){
                 //Insertar tripulante
                 //ID, nombre, rol, nivel, experiencia, vida, energía
