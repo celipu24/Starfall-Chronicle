@@ -285,7 +285,7 @@ public class App {
             h.id = leerIntMin(sc, "Introduce el ID: ", 0);
             //NOMBRE
             h.nombre = leerNombreValido(sc, "Introduce el nombre: ");
-            ////////NO SE MUY BIEN COMO HACER ESTO DE LA DESCRIPCION////////
+            //DESCRIPCION
             h.descripcion = leerNombreValido(sc, "Introduce la descripcion: ");
             //TIPO
             h.tipo = leerOpcionValida( sc,  "Introduce el tipo (Tecnología, Arma, Soporte, Hacking): ",  tiposValidos);
@@ -293,6 +293,7 @@ public class App {
             h.costeEnergia = leerIntMin(sc, "Introduce el coste de energia: ", 0);
             //CLASE PERMITIDA
             h.clasePermitida = leerOpcionValida( sc,  "Introduce que tipo tiene permitido usar esa habilidad (pueden ser todos): ",  tiposValidosTodos);
+            habilidad[topeH] = h;
             System.out.println("Habilidad insertada en posicion " + topeH  + ". ");
             topeH++;
         }else{
@@ -315,6 +316,7 @@ public class App {
             m.dificultad = leerEnteroEnRango(sc, "Introduce la dificultad (1..10): ", 1, 10);
             //RECOMPENSA XP
             m.recompensaXP = leerIntMin(sc, "Introduce la recompensa de XP: ", 0);
+            mision[topeM] = m;
             System.out.println("Mision insertada en posicion " + topeM +  ". ");
             topeM++;
         }else{
@@ -339,7 +341,7 @@ public class App {
             }else if (eleccion == 2) {
                 if(topeH<habilidad.length){
                     int pos = leerEnteroEnRango(sc, "Introduce la posicion donde desea insertar los datos (0-" + (topeH) + "): ", 0, topeH);
-                    topeT = insertarHabilidadPos(sc, habilidad, topeH, pos);
+                    topeH = insertarHabilidadPos(sc, habilidad, topeH, pos);
                 }else{
                     System.out.println("No se pueden insertar mas habilidades, el array esta lleno.");
                 } 
@@ -351,7 +353,7 @@ public class App {
                     System.out.println("No se pueden insertar mas misiones, el array esta lleno.");
                 }     
             }
-            desearContinuar = leerEnteroEnRango(sc, "Desea insertar otro dato? 1.-Si 2.-No", 1, 2);
+            desearContinuar = leerEnteroEnRango(sc, "Desea insertar otro dato? 1.-Si 2.-No\n", 1, 2);
         }while(desearContinuar != 2);
         return new int[] {topeT, topeH, topeM};
     }
@@ -383,7 +385,7 @@ public class App {
             //ENERGÍA
             t.energía = leerIntMin(sc, "Introduce la energia: ", 0);
             //en que puesto ha sido insertado
-            System.out.print("Tripulante insertado en posicion " + pos + ". ");
+            System.out.println("Tripulante insertado en posicion " + pos + ". ");
             tripulante[pos] = t;
             topeT++;
         }else{
@@ -409,8 +411,7 @@ public class App {
             h.id = leerIntMin(sc, "Introduce el ID: ", 0);
             //NOMBRE
             h.nombre = leerNombreValido(sc, "Introduce el nombre: ");
-            ////////NO SE MUY BIEN COMO HACER ESTO DE LA DESCRIPCION////////
-            System.out.print("Introduce la descripcion: ");
+            //DESCRIPCION
             h.descripcion = leerNombreValido(sc, "Introduce la descripcion: ");
             //TIPO
             h.tipo = leerOpcionValida( sc,  "Introduce el tipo (Tecnología, Arma, Soporte, Hacking): ",  tiposValidos);
@@ -418,7 +419,6 @@ public class App {
             h.costeEnergia = leerIntMin(sc, "Introduce el coste de energia: ", 0);
             //CLASE PERMITIDA
             h.clasePermitida = leerOpcionValida( sc,  "Introduce que tipo tiene permitido usar esa habilidad (pueden ser todos): ",  tiposValidosTodos);
-
             System.out.print("Habilidad insertada en posicion " + pos);
             habilidad[pos] = h;
             topeH++;
@@ -535,7 +535,7 @@ public class App {
             System.out.println("No hay tripulantes que mostrar.");
         }else{
             for(int i=0; i<topeT; i++){
-                System.out.println("[" + i + "] " + " ID:" + tripulante[i].id + " | " + tripulante[i].nombre + " (" + tripulante[i].rol + ") | nivel:" + tripulante[i].nivel + " | xp:" + tripulante[i].experiencia + " | vida:" + tripulante[i].vida + " | energia:" + tripulante[i].energía + " | habs: " /* METER HABILIDADES*/);
+                System.out.println("[" + i + "] " + " ID:" + tripulante[i].id + " | " + tripulante[i].nombre + " (" + tripulante[i].rol + ") | nivel:" + tripulante[i].nivel + " | xp:" + tripulante[i].experiencia + " | vida:" + tripulante[i].vida + " | energia:" + tripulante[i].energía + " | habs: [" + tripulante[i].habilidadesAprendidas[0] + ", " + tripulante[i].habilidadesAprendidas[1] + ", " + tripulante[i].habilidadesAprendidas[2] + "] ");
             }
         }
     }
