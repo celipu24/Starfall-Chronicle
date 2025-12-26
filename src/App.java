@@ -52,6 +52,14 @@ public class App {
                     System.out.println("Mostrar todos tripulantes/habilidades/misiones");
                     mostrarTodos(tripulante, habilidad, mision, topeTripulante, topeHabilidad, topeMision);
                     break;
+                case 5:
+                    System.out.println("Buscar tripulante/habilidad/mision por ID");
+                    buscarPorID(sc, tripulante, habilidad, mision, topeTripulante, topeHabilidad, topeMision);
+                    break;
+                case 6:
+                    System.out.println("Ordenar tripulantes alfabeticamente");
+                    ordenarTripulantesAlfabeticamente(tripulante, topeTripulante);
+                    break;
                 case 14:
                     salir = true;
                     System.out.println("Has decidido salir del programa.");
@@ -560,7 +568,110 @@ public class App {
         }
     }
     
+    // Buqueda genral por ID
+    public static void buscarPorID(Scanner sc, Tripulante[] tripulante, Habilidad[] habilidad, Mision[] mision, int topeT, int topeH, int topeM) {
+        int desearContinuar;
+        do {
+            int eleccion = leerEnteroEnRango(sc, "Que desea buscar? 1.-Tripulante 2.-Habilidad 3.-Mision: ", 1, 3);
+            int idBuscado = leerIntMin(sc, "Introduce el ID a buscar: ", 0);
 
+            boolean encontrado;
+
+            if (eleccion == 1) {
+                encontrado = buscarTripulantePorID(tripulante, topeT, idBuscado);
+            } else if (eleccion == 2) {
+                encontrado = buscarHabilidadPorID(habilidad, topeH, idBuscado);
+            } else {
+                encontrado = buscarMisionPorID(mision, topeM, idBuscado);
+            }
+
+            if (!encontrado) {
+                System.out.println("No existe ningún elemento con ese ID");
+            }
+
+            desearContinuar = leerEnteroEnRango(sc, "Desea buscar otro dato? 1.-Si 2.-No: ", 1, 2);
+        } while (desearContinuar != 2);
+    }
+
+    //Busqueda tripulante por ID
+    public static boolean buscarTripulantePorID(Tripulante[] tripulante, int topeT, int id) {
+        for (int i = 0; i < topeT; i++) {
+            if (tripulante[i].id == id) {
+                System.out.println("-----TRIPULANTE ENCONTRADO-----");
+                System.out.println(
+                        "ID:" + tripulante[i].id +
+                        " | " + tripulante[i].nombre +
+                        " (" + tripulante[i].rol + ")" +
+                        " | nivel:" + tripulante[i].nivel +
+                        " | xp:" + tripulante[i].experiencia +
+                        " | vida:" + tripulante[i].vida +
+                        " | energia:" + tripulante[i].energía +
+                        " | habs: [" +
+                        tripulante[i].habilidadesAprendidas[0] + ", " +
+                        tripulante[i].habilidadesAprendidas[1] + ", " +
+                        tripulante[i].habilidadesAprendidas[2] + "]"
+                );
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Busqueda habilidad por ID
+    public static boolean buscarHabilidadPorID(Habilidad[] habilidad, int topeH, int id) {
+        for (int i = 0; i < topeH; i++) {
+            if (habilidad[i].id == id) {
+                System.out.println("-----HABILIDAD ENCONTRADA-----");
+                System.out.println(
+                        "ID:" + habilidad[i].id +
+                        " | " + habilidad[i].nombre +
+                        " (" + habilidad[i].tipo + ")" +
+                        " | coste energia:" + habilidad[i].costeEnergia +
+                        " | clase permitida:" + habilidad[i].clasePermitida +
+                        " | " + habilidad[i].descripcion
+                );
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Busqueda mision por ID
+    public static boolean buscarMisionPorID(Mision[] mision, int topeM, int id) {
+        for (int i = 0; i < topeM; i++) {
+            if (mision[i].id == id) {
+                System.out.println("-----MISION ENCONTRADA-----");
+                System.out.println(
+                        "ID:" + mision[i].id +
+                        " | " + mision[i].nombre +
+                        " | dificultad:" + mision[i].dificultad +
+                        " | recompensa xp:" + mision[i].recompensaXP
+                );
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // Ordenar los tripulantes alfabeticamente 
+    public static void ordenarTripulantesAlfabeticamente(Tripulante[] tripulante, int topeT) {
+        if (topeT <= 1) {
+            System.out.println("No hay suficientes tripulantes para ordenar");
+            return;
+        }
+        for (int i = 0; i < topeT - 1; i++) {
+            for (int j = 0; j < topeT - 1 - i; j++) {
+
+                if (tripulante[j].nombre.compareToIgnoreCase(tripulante[j + 1].nombre) > 0) {
+                    Tripulante aux = tripulante[j];
+                    tripulante[j] = tripulante[j + 1];
+                    tripulante[j + 1] = aux;
+                }
+            }
+        }
+        System.out.println("-----TRIPULANTES ORDENADOS ALFABETICAMENTE-----");
+        mostrarTodosTripulantes(tripulante, topeT);
+    }
 
 
 
