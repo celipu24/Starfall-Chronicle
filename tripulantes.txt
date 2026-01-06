@@ -1,0 +1,4 @@
+12,Barrio,Ingeniero,3,121,125,2,-1,-1
+1,Celia,Piloto,4,132,100,-1,-1,-1
+2,Gema,Ingeniero,3,110,137,-1,-1,-1
+3,Paula,Marine,5,165,87,-1,-1,-1

@@ -1,0 +1,5 @@
+1,Propulsión de Emergencia,Tecnologia,30,Piloto,Aumenta la velocidad temporal
+2,Hackeo Cuántico,Hacking,10,Ingeniero,Infiere con sistemas enemigos
+3,Nano-cura,Soporte,20,Medico,Restaura vida en un objetivo
+4,Tiro Preciso,Arma,15,Marine,Aumenta el daño del arma
+5,Reparación Rápida,Tecnologia,20,Ingeniero,Repara sistemas dañados

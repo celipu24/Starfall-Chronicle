@@ -499,52 +499,64 @@ public class App {
         int desearContinuar;
         do{
             int eleccion = leerEnteroEnRango(sc,"Que desea eliminar? 1.-Tripulante 2.-Habilidad 3.-Mision:\n", 1, 3);
-            if(eleccion == 1){
+            if(eleccion == 1 && topeT>0){
                 topeT = eliminarTripulantePos(sc, tripulante, topeT);
-            } else if (eleccion == 2) {
+            } else if (eleccion == 2 && topeH>0) {
                 topeH = eliminarHabilidadPos(sc, habilidad, topeH);
-            } else {
+            } else if (eleccion == 3 && topeM>0) {
                 topeM = eliminarMisionPos(sc, mision, topeM);
+            }else{
+                System.out.println("No hay datos que eliminar en esta categoria.");
             }
-            desearContinuar = leerEnteroEnRango(sc, "Desea eliminar otro dato? 1.-Si 2.-No", 1, 2);
+            desearContinuar = leerEnteroEnRango(sc, "Desea eliminar otro dato? 1.-Si 2.-No\n", 1, 2);
         }while(desearContinuar != 2);
         return new int[]{topeT, topeH, topeM};
     }
 
     //Eliminar tripulante por posicion
     public static int eliminarTripulantePos(Scanner sc, Tripulante[] tripulante, int topeT) {
-        int pos = leerEnteroEnRango(sc, "Introduce la posicion del tripulante que desea eliminar (0-" + (topeT-1) + "): ", 0, topeT-1);
-        System.out.print("Vas a eliminar al tripulante: ID: " + tripulante[pos].id + " | " + tripulante[pos].nombre + " (" + tripulante[pos].rol + ") | nivel:" + tripulante[pos].nivel + " | xp:" + tripulante[pos].experiencia + " | vida:" + tripulante[pos].vida + " | energia:" + tripulante[pos].energia + " | habs: [" + tripulante[pos].habilidadesAprendidas[0] + ", " + tripulante[pos].habilidadesAprendidas[1] + ", " + tripulante[pos].habilidadesAprendidas[2] + "] ");
-        //desplazamos las posiciones del array para "eliminar" el dato
-        for(int i=pos; i<topeT-1; i++){
-            tripulante[i] = tripulante[i+1];
+        int pos = leerEnteroEnRango(sc, "Introduce la posicion del tripulante que desea eliminar (0-" + (topeT-1) + "): \n", 0, topeT-1);
+        System.out.println("Vas a eliminar al tripulante: ID: " + tripulante[pos].id + " | " + tripulante[pos].nombre + " (" + tripulante[pos].rol + ") | nivel:" + tripulante[pos].nivel + " | xp:" + tripulante[pos].experiencia + " | vida:" + tripulante[pos].vida + " | energia:" + tripulante[pos].energia + " | habs: [" + tripulante[pos].habilidadesAprendidas[0] + ", " + tripulante[pos].habilidadesAprendidas[1] + ", " + tripulante[pos].habilidadesAprendidas[2] + "]");
+        int confirmar = leerEnteroEnRango(sc, "Esta seguro de querer eliminar este tripulante? (1.-Si, 2.-No)\n", 1, 2);
+        if(confirmar == 1){
+            //desplazamos las posiciones del array para "eliminar" el dato
+            for(int i=pos; i<topeT-1; i++){
+                tripulante[i] = tripulante[i+1];
+            }
+            tripulante[topeT-1] = null; //opcional, para evitar referencias colgantes
+            topeT--;
+            System.out.println("Tripulante eliminado de la posicion " + pos + ". ");
+        }else{
+            System.out.println("No se ha eliminado ningun tripulante.");
         }
-        tripulante[topeT-1] = null; //opcional, para evitar referencias colgantes
-        topeT--;
-        System.out.print("Tripulante eliminado de la posicion " + pos + ". ");
         return topeT;
     }
 
 
     //Eliminar habilidad por posicion
     public static int eliminarHabilidadPos(Scanner sc, Habilidad[] habilidad, int topeH) {
-        int pos = leerEnteroEnRango(sc, "Introduce la posicion de la habilidad que desea eliminar (0-" + (topeH-1) + "): ", 0, topeH-1);
-        System.out.print("Vas a eliminar la habilidad: ID:" + habilidad[pos].id + " | " + habilidad[pos].nombre + " (" + habilidad[pos].tipo + ") | coste energia:" + habilidad[pos].costeEnergia + " | clase permitida:" + habilidad[pos].clasePermitida + " | " + habilidad[pos].descripcion + ". ");
-        //desplazamos las posiciones del array para "eliminar" el dato
-        for(int i=pos; i<topeH-1; i++){
-            habilidad[i] = habilidad[i+1];
+        int pos = leerEnteroEnRango(sc, "Introduce la posicion de la habilidad que desea eliminar (0-" + (topeH-1) + "): \n", 0, topeH-1);
+        System.out.println("Vas a eliminar la habilidad: ID:" + habilidad[pos].id + " | " + habilidad[pos].nombre + " (" + habilidad[pos].tipo + ") | coste energia:" + habilidad[pos].costeEnergia + " | clase permitida:" + habilidad[pos].clasePermitida + " | " + habilidad[pos].descripcion + ". ");
+        int confirmar = leerEnteroEnRango(sc, "Esta seguro de querer eliminar esta habilidad? (1.-Si, 2.-No)\n", 1, 2);
+        if(confirmar == 1){
+            //desplazamos las posiciones del array para "eliminar" el dato
+            for(int i=pos; i<topeH-1; i++){
+                habilidad[i] = habilidad[i+1];
+            }
+            habilidad[topeH-1] = null;
+            topeH--;
+            System.out.println("Habilidad eliminada de la posicion " + pos + ".");
+        }else{
+            System.out.println("No se ha eliminado ninguna habilidad.");
         }
-        habilidad[topeH-1] = null;
-        topeH--;
-        System.out.print("Habilidad eliminada de la posicion " + pos + ". ");
         return topeH;
     }
 
     //Eliminar mision por posicion
     public static int eliminarMisionPos(Scanner sc, Mision[] mision, int topeM) {
-        int pos = leerEnteroEnRango(sc, "Introduce la posicion de la mision que desea eliminar (0-" + (topeM-1) + "): ", 0, topeM-1);
-        System.out.print("Vas a eliminar la mision: ID:" + mision[pos].id + " | " + mision[pos].nombre + " | dificultad:" + mision[pos].dificultad + " | recompensa xp:" + mision[pos].recompensaXP + ". ");
-        int confirmar = leerEnteroEnRango(sc, "Esta seguro de querer eliminar este dato? ", 1, 2);
+        int pos = leerEnteroEnRango(sc, "Introduce la posicion de la mision que desea eliminar (0-" + (topeM-1) + "): \n", 0, topeM-1);
+        System.out.println("Vas a eliminar la mision: ID:" + mision[pos].id + " | " + mision[pos].nombre + " | dificultad:" + mision[pos].dificultad + " | recompensa xp:" + mision[pos].recompensaXP + ". ");
+        int confirmar = leerEnteroEnRango(sc, "Esta seguro de querer eliminar esta mision? (1.-Si, 2.-No)\n", 1, 2);
         if(confirmar == 1){
             //desplazamos las posiciones del array para "eliminar" el dato
             for(int i=pos; i<topeM-1; i++){
@@ -552,7 +564,7 @@ public class App {
             }
             mision[topeM-1] = null;
             topeM--;
-            System.out.print("Mision eliminada de la posicion " + pos + ". ");
+            System.out.println("Mision eliminada de la posicion " + pos + ". ");
         }else{
             System.out.println("No se ha eliminado ningun dato.");
         }
@@ -802,6 +814,7 @@ public class App {
             boolean subio = false;
             while (t.experiencia >= (int) Math.floor(t.nivel * 100 * 1.2)) {
                 int umbral = (int) Math.floor(t.nivel * 100 * 1.2);
+                //experiencia sobrante la conservamos para el siguiente nivel
                 t.experiencia -= umbral;
                 t.nivel += 1;
                 t.vida += (int) Math.floor(t.vida * 0.10);
